@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script>
+      // Per AI Studio runtime guidelines (HMR: Disabled. Ignore WebSocket errors.)
+      // Suppress Vite HMR WebSocket connection failure logs and uncaught error popups
+      (function() {
+        // Patch WebSocket prototype and constructor to suppress unhandled errors
+        if (typeof window !== 'undefined' && window.WebSocket) {
+          const OrigWebSocket = window.WebSocket;
+          window.WebSocket = function(url, protocols) {
+            const ws = protocols ? new OrigWebSocket(url, protocols) : new OrigWebSocket(url);
+            ws.addEventListener('error', function(e) {
+              // Suppress unhandled event bubbling for vite-hmr websockets
+              if (url && (url.includes('token=') || url.includes('vite') || protocols === 'vite-hmr')) {
+                e.stopImmediatePropagation?.();
+              }
+            });
+            return ws;
+          };
+          window.WebSocket.prototype = OrigWebSocket.prototype;
+          window.WebSocket.CONNECTING = OrigWebSocket.CONNECTING;
+          window.WebSocket.OPEN = OrigWebSocket.OPEN;
+          window.WebSocket.CLOSING = OrigWebSocket.CLOSING;
+          window.WebSocket.CLOSED = OrigWebSocket.CLOSED;
+        }
+
+        const origError = console.error;
+        console.error = function(...args) {
+          const msg = (args[0] && typeof args[0] === 'object' && args[0].message) ? args[0].message : String(args[0] || '');
+          if (
+            msg.includes('WebSocket closed without opened') ||
+            msg.includes('[vite]') ||
+            msg.includes('WebSocket') ||
+            msg.includes('connection lost')
+          ) {
+            return;
+          }
+          origError.apply(console, args);
+        };
+
+        window.addEventListener('unhandledrejection', function(event) {
+          const reasonMsg = (event.reason && (event.reason.message || event.reason.toString())) || '';
+          if (
+            reasonMsg.includes('WebSocket closed without opened') ||
+            reasonMsg.includes('[vite]') ||
+            reasonMsg.includes('WebSocket')
+          ) {
+            event.stopImmediatePropagation?.();
+            event.preventDefault();
+          }
+        }, true);
+
+        window.addEventListener('error', function(event) {
+          const errMsg = (event.message || '') + (event.error?.message || '');
+          if (
+            errMsg.includes('WebSocket closed without opened') ||
+            errMsg.includes('[vite]') ||
+            errMsg.includes('WebSocket')
+          ) {
+            event.stopImmediatePropagation?.();
+            event.preventDefault();
+          }
+        }, true);
+      })();
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#4f46e5" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Vigilytics" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/pwa-192x192.png" />
+    <title>Vigilytics - Pharmacovigilance & Safety Signal Intelligence</title>
+    <meta name="description" content="Vigilytics decision-support platform for adverse drug reaction monitoring, duplicate detection, causality assessment, and safety signal escalation." />
+    <meta property="og:title" content="Vigilytics - Pharmacovigilance & Safety Signal Intelligence" />
+    <meta property="og:description" content="Vigilytics decision-support platform for adverse drug reaction monitoring, duplicate detection, causality assessment, and safety signal escalation." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

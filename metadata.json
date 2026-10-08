@@ -1,0 +1,8 @@
+{
+  "name": "Remix Remix Remix AegisPV - Pharmacovigilance \u0026 Safety Signal Intelligence",
+  "description": "Enterprise pharmacovigilance decision-support platform for adverse drug reaction monitoring, duplicate detection, causality assessment, and safety signal escalation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

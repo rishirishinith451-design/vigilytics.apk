@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="pvGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4f46e5"/>
+      <stop offset="100%" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="url(#pvGrad)"/>
+  <path d="M256 96 C190 96 144 140 144 240 C144 340 256 416 256 416 C256 416 368 340 368 240 C368 140 322 96 256 96 Z" fill="#ffffff" opacity="0.15" filter="url(#shadow)"/>
+  <!-- Cross -->
+  <rect x="228" y="160" width="56" height="176" rx="12" fill="#ffffff"/>
+  <rect x="168" y="220" width="176" height="56" rx="12" fill="#ffffff"/>
+  <!-- Heartbeat line -->
+  <path d="M180 370 L220 370 L236 330 L256 400 L276 345 L292 370 L332 370" fill="none" stroke="#38bdf8" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
